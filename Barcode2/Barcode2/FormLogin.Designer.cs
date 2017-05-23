@@ -34,6 +34,7 @@
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.chkR = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -48,7 +49,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(53, 67);
+            this.label2.Location = new System.Drawing.Point(53, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 12);
             this.label2.TabIndex = 1;
@@ -63,7 +64,7 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(88, 64);
+            this.txtPassword.Location = new System.Drawing.Point(88, 56);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(139, 21);
             this.txtPassword.TabIndex = 3;
@@ -89,11 +90,24 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // chkR
+            // 
+            this.chkR.AutoSize = true;
+            this.chkR.Checked = true;
+            this.chkR.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkR.Location = new System.Drawing.Point(88, 83);
+            this.chkR.Name = "chkR";
+            this.chkR.Size = new System.Drawing.Size(96, 16);
+            this.chkR.TabIndex = 6;
+            this.chkR.Text = "记录账号密码";
+            this.chkR.UseVisualStyleBackColor = true;
+            // 
             // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(269, 146);
+            this.Controls.Add(this.chkR);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.txtPassword);
@@ -119,5 +133,6 @@
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.CheckBox chkR;
     }
 }

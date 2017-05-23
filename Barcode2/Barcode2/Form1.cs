@@ -7,22 +7,80 @@ using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading;
+using Aspose.BarCode;
 
 namespace Barcode2
 {
     public partial class Form1 : Form
     {
-        string str_api = "http://hyg.xinlvs.com";
+        string str_api = "http://hygdata.xinlvs.com";
         string str_PrintData = "/api/print.php?act=getPrintData";
         string Token;
         Printer printer;
 
         public Form1(string token)
         {
+            Aspose.BarCode.BarCodeBuilder
             Token = token;
             InitializeComponent();
             StartPosition = FormStartPosition.CenterScreen;
             LoadDevice();
+            Read();
+            this.notifyIcon1.Text = this.Text;
+        }
+
+        #region 托盘
+
+        #region
+        //创建NotifyIcon对象 
+        NotifyIcon notifyicon = new NotifyIcon();        
+        #endregion
+
+        #region 隐藏任务栏图标、显示托盘图标
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            //判断是否选择的是最小化按钮 
+            if (WindowState == FormWindowState.Minimized)
+            {
+                //托盘显示图标等于托盘图标对象 
+                //注意notifyIcon1是控件的名字而不是对象的名字 
+                notifyIcon1.Icon = this.Icon;// ico;
+                //隐藏任务栏区图标 
+                this.ShowInTaskbar = false;
+                //图标显示在托盘区 
+                notifyicon.Visible = true;
+            }
+        }
+
+        #region 还原窗体
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            //判断是否已经最小化于托盘 
+            if (WindowState == FormWindowState.Minimized)
+            {
+                //还原窗体显示 
+                WindowState = FormWindowState.Normal;
+                //激活窗体并给予它焦点 
+                this.Activate();
+                //任务栏区显示图标 
+                this.ShowInTaskbar = true;
+                //托盘区图标隐藏 
+                notifyicon.Visible = false;
+            }
+        }
+        #endregion
+        #endregion
+
+        #endregion
+
+        public void Read()
+        {
+            if(File.Exists("url.txt"))
+            {
+                StreamReader sr = new StreamReader("url.txt", Encoding.Default);
+                str_api = sr.ReadLine();
+                sr.Close();
+            }
         }
 
         private void LoadDevice()
@@ -69,25 +127,29 @@ namespace Barcode2
         private void Run()
         {
             var data = GetPrintData();
-            if(data.status == 40000)
+            if(data != null)
             {
-                return;
+                if (data.status == 40000)
+                {
+                    return;
+                }
+                if (printer == null)
+                {
+                    printer = new Printer();
+                    Thread th = new Thread(printer.Run);
+                    th.Start();
+                }
+                printer.Enqueue(data);
             }
-            if (printer == null)
-            {
-                printer = new Printer();
-                Thread th = new Thread(printer.Run);
-                th.Start();
-            }
-            printer.Enqueue(data);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             if(button2.Text == "开始")
             {
+                this.WindowState = FormWindowState.Minimized;
                 button2.Text = "停止";
-                textBox1.Enabled = false;                
+                textBox1.Enabled = false;
                 timer1.Enabled = true;
             }
             else
